@@ -39,7 +39,7 @@ int main(int argc, const char *argv[])
 	float init_threshold=DEF_THR, em_threshold=DEF_THR;
 	int init_method=0;
 
-	///Read command line options
+	///Read command line options (Aquí es llegeix la linea de comandos)
 	int retv = read_options(argc, argv, input_dir, input_ext, filenames,
 		nmix, gmm_filename,
 		init_iterations, em_iterations, init_threshold, em_threshold,
@@ -57,22 +57,30 @@ int main(int argc, const char *argv[])
 
 	GMM gmm;
 
-	/// \TODO Initialize GMM from data; initially, you should implement random initialization.
+	/// \DONE Initialize GMM from data; initially, you should implement random initialization.
 	///
 	/// Other alternatives are: vq, em_split... See the options of the program and place each
 	/// initicialization accordingly.
 	switch (init_method) {
-		case 0:
+		case 0:	//Inicialització aleatoria
+
+			gmm.random_init(data, nmix);
+
 			break;
 		case 1:
-			break;
-		case 2:
-			break;
-		default:
-			;
+      		gmm.vq_lbg(data, nmix,  init_iterations, init_threshold, verbose);  
+    		break;
+  		case 2:
+      		gmm.em_split(data, nmix, init_iterations, init_threshold,verbose);
+       		break;
+  		default:
+      		gmm.random_init(data, nmix);
+		;
 	}
 
-	/// \TODO Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
+	/// \DONE Apply EM to estimate GMM parameters (complete the funcion in gmm.cpp)
+
+	gmm.em(data, em_iterations, em_threshold, verbose);
 
 	//Create directory, if it is needed
 	gmm_filename.checkDir();
