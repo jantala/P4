@@ -107,6 +107,26 @@ compute_mfcc() {
     done
 }
 
+compute_lpcc() {
+    db_sen1=$1
+    shift
+    for filename in $(sort $*); do
+        mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
+        EXEC="wav2lpcc 12 18 $db_sen1/$filename.wav $w/$FEAT/$filename.$FEAT" #orden LPC y orden LPCC
+        echo $EXEC && $EXEC || exit 1
+    done
+}
+
+compute_mfcc() {
+    db_sen2=$1
+    shift
+    for filename in $(sort $*); do
+        mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
+        EXEC="wav2mfcc 8 16 24 $db_sen2/$filename.wav $w/$FEAT/$filename.$FEAT"  #Frecuencia de muestreo, orden del MFCC y orden del banco de filtros
+        echo $EXEC && $EXEC || exit 1
+    done
+}
+
 #  Set the name of the feature (not needed for feature extraction itself)
 if [[ ! -v FEAT && $# > 0 && "$(type -t compute_$1)" = function ]]; then
     FEAT=$1
@@ -175,6 +195,8 @@ for cmd in $*; do
        EXEC="gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -w $world -E gmm $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates"
     echo $EXEC; $EXEC | tee $LOG_VERIF || exit 1
 
+       EXEC="gmm_verify -d $w/$FEAT -e $FEAT -w $world -D $w/gmm/$FEAT $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates"
+       echo $EXEC ; $EXEC | tee $LOG_VERIF || exit 1 
    elif [[ $cmd == verifyerr ]]; then
        if [[ ! -s $LOG_VERIF ]] ; then
           echo "ERROR: $LOG_VERIF not created"
@@ -193,9 +215,9 @@ for cmd in $*; do
        #
        # El fichero con el resultado del reconocimiento debe llamarse $FINAL_CLASS, que deberá estar en el
        # directorio de la práctica (PAV/P4).
-       compute_$FEAT $db_test $lists/final/class.test #parametrizar
+       compute_$FEAT $db_test $lists/final/class.test
        EXEC="gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/final/class.test"
-       echo $EXEC && $EXEC | tee $INAL_CLASS || exit 1
+       echo $EXEC && $EXEC | tee $LOG_CLASS || exit 1
    
    elif [[ $cmd == finalverif ]]; then
        ## @file
@@ -214,14 +236,14 @@ for cmd in $*; do
        # candidato para la señal a verificar. En $FINAL_VERIF se pide que la tercera columna sea 1,
        # si se considera al candidato legítimo, o 0, si se considera impostor. Las instrucciones para
        # realizar este cambio de formato están en el enunciado de la práctica.
-       compute_$FEAT $db_test $lists/final/verif.test #parametrizar
-       EXEC="gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -w $world -E gmm $lists/gmm.list $lists/final/verif.test $lists/verif/verif.test.candidates"
-       echo $EXEC; $EXEC | tee $TEMP_VERIF || exit 1
-        #SELECCIONAR EL UMBRAL OPTIMO(-3,124) CON EL RESULTADO DE VERIFYERR
+       compute_$FEAT $db_test $lists/final/verif.test
+       EXEC="gmm_verify -d $w/$FEAT -e $FEAT -w $world -D $w/gmm/$FEAT $lists/gmm.list $lists/final/verif.test $lists/final/verif.test.candidates"
+       echo $EXEC ; $EXEC | tee $TEMP_VERIF || exit 1 
+
+       #seleccionar el umbral en el script de pearl
        perl -ane 'print "$F[0]\t$F[1]\t";
-        if ($F[2] > -3.214) {print "1\n"}
-        else {print "0\n"}' $TEMP_VERIF | tee $FINAL_VERIF
-   
+    if ($F[2] > 1.73) {print "1\n"}    
+    else {print "0\n"}' $TEMP_VERIF  | tee $FINAL_VERIF
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.
    elif [[ "$(type -t compute_$cmd)" = function ]]; then

@@ -33,16 +33,54 @@ ejercicios indicados.
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
 
+En el script wav2lp.sh se eliminan los ficheros temporales antes de hacer la parametrización del señal .wav.
+![alt text](Imag/WAV2LP_cap1.png)
+Para utilizar este script necesitamos introducir el numero de coeficientes LPC, los ficheros .wav de entrada, y el fichero de salida. Si no se introducen estos parametros se muestra el mensaje. 
+
+![alt text](Imag/WAV2LP_cap2.png)
+Guardamos los parametros especificados en $1 , $2 , $3. El $0 no lo usamos porque es el nombre del script. En función de si nuestra maquina es ubuntu o apple se modifican los comandos para utilizar sptk. Esto se controla mediante la variable $UBUNTU_SPTK. 
+
+![alt text](Imag/WAV2LP_cap3.png)
+
+Pasamos a la función principal del scrpit, utilizando un pipeline principal controlamos el formato del señal que va a recibir SPTK en cada "programa" y hemos de harcelo respetando las instrucciones de SPTK.
+
+En la primera pipeline SOX nos permite convertir los bytes del fichero wav a enteros de 16 bits con signo. Esto es necesario para trabajar con SPTK porque no podemos utilizar la codificación del fichero wav ya que esta hecha con la ley mu, y SPTK solo trabaja con señales tipo float.
+
+En el siguiente paso utilizamos X2X para convertir los datos a enteros con signo de 2 bytes (+s) y luego a float de 4 bytes (+f).
+
+Con el programa FRAME hacemos que la extracción de los datos se realize en ventanas de 240 muestras ( corresponde con un vetana de 30 ms y una frecuencia de muestro de 8000 Hz) y el desplazamiento entre ventanas de 80 muestras ( 10 ms).
+
+Con el programa WINDOW enventamos el señal. Como ya lo hemos configurado antes, son 240 muestas que entran y 240 muestras que salen.
+
+En el utlimo paso usamos el programa LPC para determinar el numero de muestras y el numero de coeficentes lpc.
+
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 51 del script `wav2lp.sh`).
 
+  ![alt text](Imag/WAV2LP_cap4.png)
+
+  Para definir el numero de columnas usamos el orden de los coeficientes LPC, pero sumamos uno, ya que la primera columna corresponde a la ganancia.
+
+  Para saber el numero de filas, primero pasamos el contenido de los ficheros temporales a un conjunto de 4 bytes float concatedanos  a un formato ASCII (+fa). De esta forma obtenemos un archivo con un valor ASCII en cada linia  y podemos extraerlas si usamos wc -1 . Con este metodo sabemos cual es el numero de filas. 
+
+
   * ¿Por qué es más conveniente el formato *fmatrix* que el SPTK?
+
+Este formato es conveniente ya que hemos pasado de un fichero .wav codificado con la ley mu en conjutos de 8 bits a fmatrix que nos permite obtener una señal ordenada y carecterizada por tramas. Cada columna correspode a los coeficientes lpc y las filas estan contenidas por cada trama. Este formato nos permite trabjar de forma mas sencilla y comoda. Así podemos seleccionar y visualizar columnas en especifico mediante los progrmas "fmatrix_show" y "fmatrix_cut"
+
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
-- Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
-  fichero <code>scripts/wav2mfcc.sh</code>:
+# Main command for feature extration
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order > $base.lpcc || exit 1
+
+- Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su fichero <code>scripts/wav2mfcc.sh</code>:
+
+  # Main command for feature extration
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$MFCC -l 240 -m $mfcc_order -n $mel_bank_order > $base.mfcc || exit 1
 
 ### Extracción de características.
 

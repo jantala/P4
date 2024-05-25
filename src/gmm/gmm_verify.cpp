@@ -28,8 +28,8 @@ float verify(const GMM &gmm_candidate, const fmatrix &dat)
 	float score = gmm_candidate.logprob(dat);
 
 	return score;
+	/// \DONE Implementada verificación del score
 }
-
 
 float verify(const GMM &gmm_candidate, const GMM & gmm_world, const fmatrix &dat, float &lprobcand, float &lprobbackground)
 {
@@ -44,9 +44,8 @@ float verify(const GMM &gmm_candidate, const GMM & gmm_world, const fmatrix &dat
 	lprobbackground = gmm_world.logprob(dat);
 	score = lprobcand - lprobbackground;
 	return score;
-
+	/// \DONE Implementada verificación del score 
 }
-
 
 int main(int argc, const char *argv[])
 {
