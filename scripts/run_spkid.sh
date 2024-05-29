@@ -82,27 +82,7 @@ compute_lp() {
     shift
     for filename in $(sort $*); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2lp 12 18 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
-        echo $EXEC && $EXEC || exit 1
-    done
-}
-
-compute_lpcc() {
-    db=$1
-    shift
-    for filename in $(sort $*); do
-        mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2lpcc 13 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
-        echo $EXEC && $EXEC || exit 1
-    done
-}
-
-compute_mfcc() {
-    db=$1
-    shift
-    for filename in $(sort $*); do
-        mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 13 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2lp 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -116,7 +96,6 @@ compute_lpcc() {
         echo $EXEC && $EXEC || exit 1
     done
 }
-
 compute_mfcc() {
     db_sen2=$1
     shift

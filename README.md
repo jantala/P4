@@ -35,9 +35,11 @@ ejercicios indicados.
 
 En el script wav2lp.sh se eliminan los ficheros temporales antes de hacer la parametrización del señal .wav.
 ![alt text](Imag/WAV2LP_cap1.png)
+
 Para utilizar este script necesitamos introducir el numero de coeficientes LPC, los ficheros .wav de entrada, y el fichero de salida. Si no se introducen estos parametros se muestra el mensaje. 
 
 ![alt text](Imag/WAV2LP_cap2.png)
+
 Guardamos los parametros especificados en $1 , $2 , $3. El $0 no lo usamos porque es el nombre del script. En función de si nuestra maquina es ubuntu o apple se modifican los comandos para utilizar sptk. Esto se controla mediante la variable $UBUNTU_SPTK. 
 
 ![alt text](Imag/WAV2LP_cap3.png)
@@ -72,13 +74,13 @@ Este formato es conveniente ya que hemos pasado de un fichero .wav codificado co
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
-# Main command for feature extration
+Main command for feature extration
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order > $base.lpcc || exit 1
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su fichero <code>scripts/wav2mfcc.sh</code>:
 
-  # Main command for feature extration
+Main command for feature extration
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 	$MFCC -l 240 -m $mfcc_order -n $mel_bank_order > $base.mfcc || exit 1
 
@@ -86,10 +88,23 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para todas las señales de un locutor.
+  ![alt text](image-2.png)
+  ![alt text](image-3.png)
+  ![alt text](image-1.png)
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
+    Convertimos los archivos fmatrix de lpc, lpcc y mfcc en archivos txt solo con las columnas de los coeficientes 2 y 3 con fmatrix show.
+    ![alt text](image.png)
+
+    En Matlab hacemos la visualización de las graficas
+
+    ![alt text](image-4.png)
+    ![alt text](image-5.png)
+    
   + ¿Cuál de ellas le parece que contiene más información?
+
+  Si observamos las graficas de los coeficientes, con LPC la distribucion de los datos es mas concentrada y se forma una elipse diagonal, por lo que los coeficientes 2 y 3 estan correlados. En cambio los LPCC Y MFCC tiene una distribucion dispersa y con forma circular por lo que estan incorrelados los coeficientes. Por la tanto en MFCC y LPCC ganamos mas al usar varios coeficentes, porque nos aportaran mas información si trabajamos con ellos. 
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.

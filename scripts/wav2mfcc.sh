@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# Make pipeline return code the last non-zero one or zero if all the commands return zero.
 set -o pipefail
 
 ## \file
-## \TODO This file implements a very trivial feature extraction; use it as a template for other front ends.
 ## 
 ## Please, read SPTK documentation and some papers in order to implement more advanced front ends.
 
@@ -18,18 +16,18 @@ cleanup() {
 }
 
 if [[ $# != 5 ]]; then
-   echo "$0 fm mfcc_order mel_bank_order input.wav output.mfcc"
+   echo "$0 fm mfcc_order melbank_order input.wav output.mfcc"
    exit 1
 fi
 
 fm=$1
 mfcc_order=$2
-mel_bank_order=$3
+melbank_order=$3
 inputfile=$4
-outputfile=$3
+outputfile=$5
 
-UBUNTU_SPTK=1
-if [[ $UBUNTU_SPTK == 1 ]]; then
+
+if [[ 1 ]]; then
    # In case you install SPTK using debian package (apt-get)
    X2X="sptk x2x"
    FRAME="sptk frame"
@@ -45,13 +43,14 @@ fi
 
 # Main command for feature extration
 sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
-	$MFCC -l 240 -m $mfcc_order -n $mel_bank_order > $base.mfcc || exit 1
+	$MFCC -s $fm -l 240 -m $mfcc_order -n $melbank_order > $base.mfcc
    
-
 # Our array files need a header with the number of cols and rows:
-ncol=$((mfcc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
 nrow=`$X2X +fa < $base.mfcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them
 echo $nrow $ncol | $X2X +aI > $outputfile
-cat $base.lp >> $outputfile
+cat $base.mfcc >> $outputfile
+
+exit
