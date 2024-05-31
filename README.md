@@ -102,6 +102,7 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
     ![alt text](image-4.png)
     ![alt text](image-5.png)
     
+    
   + ¿Cuál de ellas le parece que contiene más información?
 
   Si observamos las graficas de los coeficientes, con LPC la distribucion de los datos es mas concentrada y se forma una elipse diagonal, por lo que los coeficientes 2 y 3 estan correlados. En cambio los LPCC Y MFCC tiene una distribucion dispersa y con forma circular por lo que estan incorrelados los coeficientes. Por la tanto en MFCC y LPCC ganamos mas al usar varios coeficentes, porque nos aportaran mas información si trabajamos con ellos. 
@@ -109,14 +110,25 @@ sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WIND
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
+  ![alt text](image-6.png)
+
+  ![alt text](image-7.png)
+
+  ![alt text](image-8.png)
+
+  ![alt text](image-9.png)
+
+ 
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
-  
+  | &rho;<sub>x</sub>[2,3] |-0.630|0.3342|0.05881|
+   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+
+  Vemos que los coeficientes pearson de MFCC y LPCC son mas cercanos a 0. Esto significa que son menos correlados, mientras que LP tiene un valor cercano a -1 con lo que sus coeficenetes si estan correlados.  
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
-
+En el caso de los LPCC se trabaja con alrededor de 13 coeficientes. Para los MFCC se utilizan entre 24 y 40 filtros, con 13 coeficientes. 
 ### Entrenamiento y visualización de los GMM.
 
 Complete el código necesario para entrenar modelos GMM.
