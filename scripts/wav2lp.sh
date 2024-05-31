@@ -18,12 +18,11 @@ cleanup() {
 }
 
 if [[ $# != 3 ]]; then # Comprobación nº de argumentos
-   echo "$0 lp_order lpcc_order input.wav output.lp"
+   echo "$0 lpc_order input.wav output.lp"
    exit 1
 fi
 
 lpc_order=$1
-lpcc_order=$2
 inputfile=$2
 outputfile=$3
 
@@ -53,6 +52,12 @@ nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them
 echo $nrow $ncol | $X2X +aI > $outputfile
+<<<<<<< HEAD
 cat $base.lpcc >> $outputfile
 
 exit
+=======
+cat $base.lp >> $outputfile
+
+exit
+>>>>>>> 1491029b56e58fb3bd35a66a3a4f9d0b48f065b3

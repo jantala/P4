@@ -80,7 +80,11 @@ fi
 compute_lp() {
     for filename in $(cat $lists/class/all.train $lists/class/all.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
+<<<<<<< HEAD
         EXEC="wav2lp 8 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+=======
+        EXEC="wav2lp 12 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+>>>>>>> 1491029b56e58fb3bd35a66a3a4f9d0b48f065b3
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -94,7 +98,6 @@ compute_lpcc() {
         echo $EXEC && $EXEC || exit 1
     done
 }
-
 compute_mfcc() {
     db_sen2=$1
     shift
