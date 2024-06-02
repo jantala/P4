@@ -195,10 +195,13 @@ for cmd in $*; do
        #
        # El fichero con el resultado del reconocimiento debe llamarse $FINAL_CLASS, que deberá estar en el
        # directorio de la práctica (PAV/P4).
-       compute_$FEAT $db_test $lists/final/class.test
-       EXEC="gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/final/class.test"
-       echo $EXEC && $EXEC | tee $LOG_CLASS || exit 1
-   
+       compute_$FEAT $db_test $lists/final/class.test #Parametrizamos la base de datos
+
+       #(gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_test.log) || exit 1
+
+       (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee $w/class_final_${FEAT}_${name_exp}.log) | tee class_test0.log || exit 1
+       cat class_test0.log | cut -f1,2 >class_test.log
+       rm class_test0.log
    elif [[ $cmd == finalverif ]]; then
        ## @file
        # \TODO

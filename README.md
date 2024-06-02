@@ -151,31 +151,49 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
 
 LP:
-![alt text](image-13.png)
+
+  ![alt text](image-13.png)
 
 LPCC:
-![alt text](image-14.png)
+
+  ![alt text](image-14.png)
 
 MFCC:
-![alt text](image-15.png)
 
-| |LP|LPCC|MFCC|
-|:-----|:-----:|:----:|:------:|
-| Error rate|11.97%|1.53%|0.76%|
+  ![alt text](image-15.png)
+
+  | |LP|LPCC|MFCC|
+  |:-----|:-----:|:----:|:------:|
+  | Error rate|11.97%|1.53%|0.76%|
 
 ### Verificación del locutor.
 
 Complete el código necesario para realizar verificación del locutor y optimice sus parámetros.
 
-- Inserte una tabla con el *score* obtenido con su mejor sistema de verificación del locutor en la tarea
-  de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
-  pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
-  de reconocimiento.
- 
+- Inserte una tabla con el *score* obtenido con su mejor sistema de verificación del locutor en la tarea de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea de reconocimiento.
+
+En este caso hemos usando los MFCC ya que como vimos en el apartado anterior, es el que consigue mejores prestaciones.
+
+Primero mostramos los "mejores" resultados encontrados por el ordenador, entendiendo que el "mejor" resultado es aquel que presenta un menor coste de detecion.
+
+  ![alt text](image-16.png)
+
+Hay tambien otro possible "mejor" resultado, aquel que no tiene falsas alarmas. Por ejemplo, si lo estamos usando para cualquer aplicación donde es mas importante estar 100% seguros que el locutor es quien dice ser.
+Asi que observamos qual es el primer valor del threshold (THR) que indica 0 falsas alarmas.
+
+  ![alt text](image-17.png)
+
+|             |  THR  |   Missed    |  False Alarm  |  Cost Detection  |
+|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
+| Lowest cost detection|   0.331096256059209  |  26/250=0.104  |  4/1000=0.0040  |  14 |
+|   No false alarm  |  0.818672763635209  | 79/250=0.3160 |  1/1000=0.0010  |   32.5  |
+
 ### Test final
 
 - Adjunte, en el repositorio de la práctica, los ficheros `class_test.log` y `verif_test.log` 
   correspondientes a la evaluación *ciega* final.
+
+Estos ficheros se encuentran en /work
 
 ### Trabajo de ampliación.
 
