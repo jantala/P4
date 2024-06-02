@@ -135,17 +135,33 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
-
+![alt text](image-10.png)
+Para conseguir esta gráfica hemos ejecutado:
+![alt text](image-11.png)
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
-
+![alt text](image-12.png)
+Como se puede observar en la imagen anterior, las dos gràficas superiores son la representación 17 (arriba izquierda) i al 10 (arriba derecha). Abajo de cada una de ellas, hemos puesto los detos de la 10 con las cotas de probabilidad de la 17(abajo izquierda), y al revés en la gràfica restante.
+Comparando las 4 graficas, observamos que las regiones de probabilidad, se acercan mucho mas a su propio conjunto de datos que no a los demas. Por eso podemos usarlo para el reconocimiento del locutor.
 ### Reconocimiento del locutor.
 
 Complete el código necesario para realizar reconociminto del locutor y optimice sus parámetros.
 
-- Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
-  SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+- Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+LP:
+![alt text](image-13.png)
+
+LPCC:
+![alt text](image-14.png)
+
+MFCC:
+![alt text](image-15.png)
+
+| |LP|LPCC|MFCC|
+|:-----|:-----:|:----:|:------:|
+| Error rate|11.97%|1.53%|0.76%|
 
 ### Verificación del locutor.
 

@@ -26,8 +26,7 @@ lpc_order=$1
 inputfile=$2
 outputfile=$3
 
-UBUNTU_SPTK=1
-if [[ $UBUNTU_SPTK == 1 ]]; then
+if [[ 1 ]]; then
    # In case you install SPTK using debian package (apt-get)
    X2X="sptk x2x"
    FRAME="sptk frame"
@@ -52,12 +51,6 @@ nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them
 echo $nrow $ncol | $X2X +aI > $outputfile
-<<<<<<< HEAD
-cat $base.lpcc >> $outputfile
-
-exit
-=======
 cat $base.lp >> $outputfile
 
 exit
->>>>>>> 1491029b56e58fb3bd35a66a3a4f9d0b48f065b3
